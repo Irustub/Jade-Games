@@ -8,10 +8,6 @@
     <title>Retro Game</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
         html,
         body {
             margin: 0;
@@ -19,7 +15,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #111;
+            background: #000;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -28,34 +24,14 @@
             width: 100vw;
             height: 100vh;
             height: 100svh;
-            margin: 0 auto;
-            background: #d0d0d0;
+            background: #000;
         }
 
-        /* Carcasa gris clara, sin logotipo */
+        /* Mantiene negra la zona que rodea al juego y los controles */
         #game-container.ejs_parent,
         #game-container .ejs_game,
         #game-container .ejs_canvas_parent {
-            position: relative;
-            overflow: hidden;
-            border-radius: 24px;
-            background-color: #d0d0d0 !important;
-        }
-
-        /* Mantiene la imagen del juego arriba y deja visible la carcasa debajo */
-        #game-container .ejs_canvas {
-            display: block;
-            width: 100% !important;
-            height: auto !important;
-            max-height: none !important;
-            object-fit: contain;
-            object-position: top center;
-            background: transparent !important;
-        }
-
-        /* Separa los controles de la pantalla */
-        #game-container .ejs_virtualGamepad_parent {
-            bottom: clamp(130px, 18vh, 260px) !important;
+            background-color: #000 !important;
         }
 
         /* Botones A y B */
@@ -64,77 +40,43 @@
             width: 64px !important;
             height: 64px !important;
             line-height: 64px !important;
-            border: 0 !important;
+            border: 2px solid #e9a8b6 !important;
             border-radius: 50% !important;
             background: #b00050 !important;
-            color: transparent !important;
-            box-shadow: none !important;
-            font-size: 0 !important;
-        }
-
-        #game-container .ejs_virtualGamepad_button.b_a::after,
-        #game-container .ejs_virtualGamepad_button.b_b::after {
-            position: absolute;
-            right: -4px;
-            bottom: -27px;
-            color: #101c63;
-            font-family: Arial, sans-serif;
-            font-size: 18px;
-            font-weight: bold;
-            line-height: 1;
-            pointer-events: none;
-        }
-
-        #game-container .ejs_virtualGamepad_button.b_a::after {
-            content: "A";
-        }
-
-        #game-container .ejs_virtualGamepad_button.b_b::after {
-            content: "B";
+            color: #fff !important;
+            box-shadow:
+                inset 2px 2px 0 rgba(255, 255, 255, 0.18),
+                0 3px 0 #65002e !important;
         }
 
         #game-container .ejs_virtualGamepad_button.b_a.ejs_virtualGamepad_button_down,
         #game-container .ejs_virtualGamepad_button.b_b.ejs_virtualGamepad_button_down {
             background: #85003c !important;
-            transform: scale(0.96);
+            transform: translateY(2px);
         }
 
-        /* Cruceta azul muy oscuro */
+        /* Botones L y R */
+        #game-container .ejs_virtualGamepad_button.b_l,
+        #game-container .ejs_virtualGamepad_button.b_r {
+            background: #741b36 !important;
+            border: 2px solid #e9a8b6 !important;
+            border-radius: 8px !important;
+            color: #fff !important;
+            box-shadow: 0 3px 0 #421020 !important;
+        }
+
+        /* Cruceta */
         #game-container .b_dpad .ejs_dpad_main {
             opacity: 1 !important;
         }
 
         #game-container .b_dpad .ejs_dpad_bar {
             background: #111321 !important;
-            border: 0 !important;
-            border-radius: 7px;
-            box-shadow: none !important;
-        }
-
-        #game-container .b_dpad .ejs_dpad_horizontal {
-            height: 46px;
-            overflow: visible;
-        }
-
-        #game-container .b_dpad .ejs_dpad_vertical {
-            width: 46px;
-            overflow: visible;
-        }
-
-        #game-container .b_dpad .ejs_dpad_horizontal:before {
-            border-right-color: #080a13;
-        }
-
-        #game-container .b_dpad .ejs_dpad_horizontal:after {
-            border-left-color: #080a13;
-        }
-
-        #game-container .b_dpad .ejs_dpad_vertical:before {
-            border-bottom-color: #080a13;
-        }
-
-        #game-container .b_dpad .ejs_dpad_vertical:after {
-            border-top-color: #080a13;
+            border: 2px solid #777 !important;
+            border-radius: 5px;
+            box-shadow:
+                inset 2px 2px 0 rgba(255, 255, 255, 0.12),
+                0 3px 0 #050505 !important;
         }
 
         /* Select y Start */
@@ -146,51 +88,10 @@
             border: 0 !important;
             border-radius: 20px !important;
             background: #85858a !important;
-            color: transparent !important;
+            color: #fff !important;
+            font-size: 12px !important;
             box-shadow: none !important;
-            font-size: 0 !important;
             transform: rotate(-24deg);
-        }
-
-        #game-container .ejs_virtualGamepad_button.b_select::after,
-        #game-container .ejs_virtualGamepad_button.b_start::after {
-            position: absolute;
-            top: 23px;
-            left: 2px;
-            color: #101c63;
-            font-family: Arial, sans-serif;
-            font-size: 15px;
-            font-weight: bold;
-            line-height: 1;
-            white-space: nowrap;
-            pointer-events: none;
-        }
-
-        #game-container .ejs_virtualGamepad_button.b_select::after {
-            content: "SELECT";
-        }
-
-        #game-container .ejs_virtualGamepad_button.b_start::after {
-            content: "START";
-        }
-
-        /* Rejillas del altavoz en la parte inferior derecha */
-        #game-container.ejs_parent::after {
-            content: "";
-            position: absolute;
-            right: 8%;
-            bottom: 4%;
-            z-index: 2;
-            width: 72px;
-            height: 64px;
-            background: repeating-linear-gradient(
-                70deg,
-                transparent 0 8px,
-                #777 8px 12px,
-                transparent 12px 24px
-            );
-            transform: rotate(-12deg);
-            pointer-events: none;
         }
     </style>
 </head>
@@ -204,7 +105,7 @@
         window.EJS_gameUrl = "smb.gba";
         window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
         window.EJS_startOnLoaded = true;
-        window.EJS_backgroundColor = "#d0d0d0";
+        window.EJS_backgroundColor = "#000000";
     </script>
 
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
