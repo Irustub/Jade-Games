@@ -1,41 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8">
-    <!-- Etiquetas para adaptación perfecta y modo "App Nativa" -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Retro NFC - Mario</title>
+
     <style>
-        /* Diseño de máximo rendimiento: sin sombras ni bordes que causen lag */
-        body, html { 
-            margin: 0; 
-            padding: 0; 
-            width: 100vw; 
-            height: 100vh; 
-            background-color: #000; 
-            overflow: hidden; 
-            /* Evita que el usuario seleccione cosas por error al tocar los botones */
-            user-select: none; 
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            overflow: hidden;
+            user-select: none;
             -webkit-user-select: none;
         }
-        #game-container { 
-            width: 100vw; 
-            height: 100vh; 
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Botones A, B, L y R */
+        #game-container .ejs_virtualGamepad_button {
+            background: linear-gradient(145deg, #a52d4c, #741b36) !important;
+            border: 2px solid #e9a8b6 !important;
+            color: #fff !important;
+            box-shadow:
+                inset 2px 2px 0 rgba(255, 255, 255, 0.2),
+                0 3px 0 #421020 !important;
+            text-shadow: 1px 1px 0 #421020;
+        }
+
+        #game-container .ejs_virtualGamepad_button_down {
+            background: #501326 !important;
+            transform: translateY(2px);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        /* Cruceta */
+        #game-container .ejs_dpad_main {
+            opacity: 1 !important;
+        }
+
+        #game-container .ejs_dpad_bar {
+            background: linear-gradient(145deg, #555, #292929) !important;
+            border: 2px solid #999;
+            box-shadow:
+                inset 2px 2px 0 rgba(255, 255, 255, 0.18),
+                2px 3px 0 #111;
+        }
+
+        #game-container .ejs_dpad_horizontal,
+        #game-container .ejs_dpad_vertical {
+            border-radius: 4px;
+            overflow: visible;
+        }
+
+        #game-container .ejs_dpad_horizontal:before {
+            border-right-color: #111;
+        }
+
+        #game-container .ejs_dpad_horizontal:after {
+            border-left-color: #111;
+        }
+
+        #game-container .ejs_dpad_vertical:before {
+            border-bottom-color: #111;
+        }
+
+        #game-container .ejs_dpad_vertical:after {
+            border-top-color: #111;
         }
     </style>
 </head>
+
 <body>
     <div id="game-container"></div>
-    
+
     <script>
-        window.EJS_player = '#game-container';
-        window.EJS_core = 'gba'; 
-        window.EJS_gameUrl = 'smb.gba'; 
-        window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
-        window.EJS_startOnLoaded = true; 
+        window.EJS_player = "#game-container";
+        window.EJS_core = "gba";
+        window.EJS_gameUrl = "smb.gba";
+        window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+        window.EJS_startOnLoaded = true;
     </script>
+
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
 </html>
