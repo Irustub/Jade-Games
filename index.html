@@ -3,27 +3,54 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Retro NFC - Mario</title>
+    <title>Retro NFC - Gameboy</title>
     <style>
-        /* 1. Cambiamos el fondo negro por el gris clásico de la carcasa de Gameboy */
-        body, html { 
-            margin: 0; padding: 0; width: 100vw; height: 100vh; 
-            background-color: #d3d5d1; 
-            overflow: hidden; 
+        /* 1. Fondo exterior (La mesa donde apoya el Gameboy) */
+        body { 
+            margin: 0; 
+            padding: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            background-color: #1a1a1a; /* Gris muy oscuro para resaltar la consola */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
-        #game-container { width: 100%; height: 100%; }
+        
+        /* 2. LA CARCASA DEL GAMEBOY */
+        #gameboy-shell {
+            background-color: #d3d5d1; /* El gris clásico de Nintendo */
+            width: 100%;
+            max-width: 450px; 
+            height: 82vh; /* AQUÍ ESTÁ EL TRUCO: Reducimos la altura a 82% para juntar la pantalla y los controles */
+            border-radius: 10px 10px 50px 10px; /* La esquina inferior derecha cortada típica del Gameboy */
+            box-shadow: inset -4px -4px 10px rgba(0,0,0,0.1), 0 15px 30px rgba(0,0,0,0.8);
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        /* 3. La pantalla y controles dentro de la carcasa */
+        #game-container { 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 5px;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
-    <div id="game-container"></div>
+    <!-- Envolvemos el emulador en nuestra carcasa virtual -->
+    <div id="gameboy-shell">
+        <div id="game-container"></div>
+    </div>
+    
     <script>
         window.EJS_player = '#game-container';
         window.EJS_core = 'gba'; 
         window.EJS_gameUrl = 'smb.gba'; 
         window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
         window.EJS_startOnLoaded = true; 
-        
-        // 2. ¡LA MAGIA DEL COLOR! Esto pinta el emulador y los controles del color magenta de Nintendo
         window.EJS_color = '#a6004c'; 
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
