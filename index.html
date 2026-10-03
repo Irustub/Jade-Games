@@ -15,7 +15,7 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            background-color: #c8c9b8;
+            background: #000;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -23,31 +23,36 @@
         #game-container {
             width: 100vw;
             height: 100vh;
-            background-color: #c8c9b8;
+            background: #000;
         }
 
-        /* Fondo de la carcasa detrás de la pantalla y los controles */
+        /* Carcasa negra detrás de la pantalla y los controles */
         #game-container .ejs_parent,
         #game-container .ejs_game,
         #game-container .ejs_canvas_parent {
-            background-color: #c8c9b8 !important;
+            background: #000 !important;
+        }
+
+        /* Separación entre la pantalla y la zona de controles */
+        #game-container .ejs_virtualGamepad_parent {
+            bottom: clamp(140px, 24vh, 340px) !important;
         }
 
         /* Botones A, B, L y R */
         #game-container .ejs_virtualGamepad_button {
-            background: linear-gradient(145deg, #a52d4c, #741b36) !important;
-            border: 2px solid #e9a8b6 !important;
-            color: #fff !important;
+            background: linear-gradient(145deg, #292929, #101010) !important;
+            border: 2px solid #777 !important;
+            color: #ddd !important;
             box-shadow:
-                inset 2px 2px 0 rgba(255, 255, 255, 0.2),
-                0 3px 0 #421020 !important;
-            text-shadow: 1px 1px 0 #421020;
+                inset 2px 2px 3px rgba(255, 255, 255, 0.14),
+                0 4px 0 #050505 !important;
+            text-shadow: 1px 1px 2px #000;
         }
 
         #game-container .ejs_virtualGamepad_button_down {
-            background: #501326 !important;
+            background: #080808 !important;
             transform: translateY(2px);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+            box-shadow: inset 0 2px 5px #000 !important;
         }
 
         /* Cruceta */
@@ -56,11 +61,11 @@
         }
 
         #game-container .ejs_dpad_bar {
-            background: linear-gradient(145deg, #555, #292929) !important;
-            border: 2px solid #999;
+            background: linear-gradient(145deg, #292929, #101010) !important;
+            border: 2px solid #666;
             box-shadow:
-                inset 2px 2px 0 rgba(255, 255, 255, 0.18),
-                2px 3px 0 #111;
+                inset 2px 2px 3px rgba(255, 255, 255, 0.12),
+                0 4px 0 #050505;
         }
 
         #game-container .ejs_dpad_horizontal,
@@ -70,19 +75,19 @@
         }
 
         #game-container .ejs_dpad_horizontal:before {
-            border-right-color: #111;
+            border-right-color: #080808;
         }
 
         #game-container .ejs_dpad_horizontal:after {
-            border-left-color: #111;
+            border-left-color: #080808;
         }
 
         #game-container .ejs_dpad_vertical:before {
-            border-bottom-color: #111;
+            border-bottom-color: #080808;
         }
 
         #game-container .ejs_dpad_vertical:after {
-            border-top-color: #111;
+            border-top-color: #080808;
         }
     </style>
 </head>
