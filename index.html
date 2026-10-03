@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Retro NFC - Mario</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; background: #000; overflow: hidden; }
+        /* 1. Cambiamos el fondo negro por el gris clásico de la carcasa de Gameboy */
+        body, html { 
+            margin: 0; padding: 0; width: 100vw; height: 100vh; 
+            background-color: #d3d5d1; 
+            overflow: hidden; 
+        }
         #game-container { width: 100%; height: 100%; }
     </style>
 </head>
@@ -17,6 +22,9 @@
         window.EJS_gameUrl = 'smb.gba'; 
         window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
         window.EJS_startOnLoaded = true; 
+        
+        // 2. ¡LA MAGIA DEL COLOR! Esto pinta el emulador y los controles del color magenta de Nintendo
+        window.EJS_color = '#a6004c'; 
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
