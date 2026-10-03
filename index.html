@@ -8,6 +8,16 @@
     <title>Retro Game</title>
 
     <style>
+        :root {
+            --shell-color: #c8c9bd;
+            --screen-end: min(66.6667vw, 100svh);
+            --gap-size: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         html,
         body {
             margin: 0;
@@ -20,18 +30,85 @@
             -webkit-user-select: none;
         }
 
+        /*
+         * La zona de controles empieza debajo de la pantalla,
+         * después de una franja negra pequeña.
+         */
+        body::before {
+            content: "";
+            position: fixed;
+            top: calc(var(--screen-end) + var(--gap-size));
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 0;
+            background: var(--shell-color);
+            pointer-events: none;
+        }
+
         #game-container {
+            position: relative;
+            z-index: 1;
             width: 100vw;
             height: 100vh;
             height: 100svh;
-            background: #000;
+            background: transparent;
         }
 
-        /* Mantiene negra la zona que rodea al juego y los controles */
         #game-container.ejs_parent,
         #game-container .ejs_game,
         #game-container .ejs_canvas_parent {
-            background-color: #000 !important;
+            background: transparent !important;
+        }
+
+        /*
+         * Mantiene el tamaño original del canvas.
+         * Solo vuelve transparente la parte vacía debajo de la imagen.
+         */
+        #game-container .ejs_canvas {
+            -webkit-mask-image: linear-gradient(
+                to bottom,
+                #000 0,
+                #000 var(--screen-end),
+                transparent calc(var(--screen-end) + 1px)
+            );
+            mask-image: linear-gradient(
+                to bottom,
+                #000 0,
+                #000 var(--screen-end),
+                transparent calc(var(--screen-end) + 1px)
+            );
+        }
+
+        /* Selector de color */
+        #color-picker {
+            position: fixed;
+            top: calc(var(--screen-end) + var(--gap-size) + 16px);
+            left: 50%;
+            z-index: 1200;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.14);
+            transform: translateX(-50%);
+        }
+
+        .color-choice {
+            width: 27px;
+            height: 27px;
+            padding: 0;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .color-choice[aria-pressed="true"] {
+            outline: 2px solid #171717;
+            outline-offset: 2px;
         }
 
         /* Botones A y B */
@@ -58,9 +135,9 @@
         /* Botones L y R */
         #game-container .ejs_virtualGamepad_button.b_l,
         #game-container .ejs_virtualGamepad_button.b_r {
-            background: #741b36 !important;
             border: 2px solid #e9a8b6 !important;
             border-radius: 8px !important;
+            background: #741b36 !important;
             color: #fff !important;
             box-shadow: 0 3px 0 #421020 !important;
         }
@@ -71,9 +148,9 @@
         }
 
         #game-container .b_dpad .ejs_dpad_bar {
-            background: #111321 !important;
             border: 2px solid #777 !important;
             border-radius: 5px;
+            background: #111321 !important;
             box-shadow:
                 inset 2px 2px 0 rgba(255, 255, 255, 0.12),
                 0 3px 0 #050505 !important;
@@ -99,6 +176,15 @@
 <body>
     <div id="game-container"></div>
 
+    <div id="color-picker" aria-label="Color de la carcasa">
+        <button class="color-choice" type="button" data-color="#4b74c7" aria-label="Azul" aria-pressed="false" title="Azul" style="background:#4b74c7"></button>
+        <button class="color-choice" type="button" data-color="#7560a8" aria-label="Morado" aria-pressed="false" title="Morado" style="background:#7560a8"></button>
+        <button class="color-choice" type="button" data-color="#b6383a" aria-label="Rojo" aria-pressed="false" title="Rojo" style="background:#b6383a"></button>
+        <button class="color-choice" type="button" data-color="#171717" aria-label="Negro" aria-pressed="false" title="Negro" style="background:#171717"></button>
+        <button class="color-choice" type="button" data-color="#c5a34a" aria-label="Dorado" aria-pressed="false" title="Dorado" style="background:#c5a34a"></button>
+        <button class="color-choice" type="button" data-color="#c8c9bd" aria-label="Gris Game Boy" aria-pressed="true" title="Gris Game Boy" style="background:#c8c9bd"></button>
+    </div>
+
     <script>
         window.EJS_player = "#game-container";
         window.EJS_core = "gba";
@@ -106,6 +192,21 @@
         window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
         window.EJS_startOnLoaded = true;
         window.EJS_backgroundColor = "#000000";
+
+        document.querySelectorAll(".color-choice").forEach((button) => {
+            button.addEventListener("click", () => {
+                document.documentElement.style.setProperty(
+                    "--shell-color",
+                    button.dataset.color
+                );
+
+                document.querySelectorAll(".color-choice").forEach((choice) => {
+                    choice.setAttribute("aria-pressed", "false");
+                });
+
+                button.setAttribute("aria-pressed", "true");
+            });
+        });
     </script>
 
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
