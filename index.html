@@ -30,22 +30,6 @@
             -webkit-user-select: none;
         }
 
-        /*
-         * La zona de controles empieza debajo de la pantalla,
-         * después de una separación negra visible.
-         */
-        body::before {
-            content: "";
-            position: fixed;
-            top: calc(var(--screen-end) + var(--gap-size));
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 0;
-            background: var(--shell-color);
-            pointer-events: none;
-        }
-
         #game-container {
             position: relative;
             z-index: 1;
@@ -61,26 +45,28 @@
             background: transparent !important;
         }
 
-        /*
-         * Mantiene el tamaño original del canvas.
-         * Solo vuelve transparente la parte vacía debajo de la imagen.
-         */
-        #game-container .ejs_canvas {
-            -webkit-mask-image: linear-gradient(
-                to bottom,
-                #000 0,
-                #000 var(--screen-end),
-                transparent calc(var(--screen-end) + 1px)
-            );
-            mask-image: linear-gradient(
-                to bottom,
-                #000 0,
-                #000 var(--screen-end),
-                transparent calc(var(--screen-end) + 1px)
-            );
+        #game-container::before,
+        #game-container::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            left: 0;
+            z-index: 2;
+            pointer-events: none;
         }
 
-        /* Selector compacto de color */
+        #game-container::before {
+            top: var(--screen-end);
+            height: var(--gap-size);
+            background: #000;
+        }
+
+        #game-container::after {
+            top: calc(var(--screen-end) + var(--gap-size));
+            bottom: 0;
+            background: var(--shell-color);
+        }
+
         #color-picker-toggle {
             position: fixed;
             top: calc(var(--screen-end) + var(--gap-size) + 12px);
@@ -91,9 +77,6 @@
             background: #292929;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
-        }
-
-        #color-picker-toggle {
             right: 14px;
             display: grid;
             width: 38px;
