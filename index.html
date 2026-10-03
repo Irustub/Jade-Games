@@ -11,7 +11,7 @@
         :root {
             --shell-color: #c8c9bd;
             --screen-end: min(66.6667vw, 100svh);
-            --gap-size: 10px;
+            --gap-size: clamp(48px, 7vh, 82px);
         }
 
         * {
@@ -32,7 +32,7 @@
 
         /*
          * La zona de controles empieza debajo de la pantalla,
-         * después de una franja negra pequeña.
+         * después de una separación negra visible.
          */
         body::before {
             content: "";
@@ -80,34 +80,89 @@
             );
         }
 
-        /* Selector de color */
+        /* Selector compacto de color */
+        #color-picker-toggle {
+            position: fixed;
+            top: calc(var(--screen-end) + var(--gap-size) + 12px);
+            z-index: 1200;
+            height: 38px;
+            border: 1px solid rgba(17, 19, 33, .24);
+            color: #fff;
+            background: #292929;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #color-picker-toggle {
+            right: 14px;
+            display: grid;
+            width: 38px;
+            place-items: center;
+            padding: 0;
+            border-radius: 50%;
+        }
+
+        .current-color {
+            width: 18px;
+            height: 18px;
+            border: 1px solid rgba(255, 255, 255, .75);
+            border-radius: 50%;
+            background: var(--shell-color);
+        }
+
         #color-picker {
             position: fixed;
-            top: calc(var(--screen-end) + var(--gap-size) + 16px);
-            left: 50%;
+            top: calc(var(--screen-end) + var(--gap-size) + 58px);
             z-index: 1200;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: 8px;
+            background: #242424;
+        }
+
+        #color-picker[hidden] {
+            display: none;
+        }
+
+        #color-picker {
+            right: 14px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 8px 12px;
-            border-radius: 20px;
-            background: rgba(0, 0, 0, 0.14);
-            transform: translateX(-50%);
+            gap: 8px;
+        }
+
+        #game-status {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            z-index: 1300;
+            max-width: calc(100vw - 40px);
+            margin: 0;
+            padding: 12px 16px;
+            border-radius: 6px;
+            color: #fff;
+            background: rgba(0, 0, 0, .86);
+            font: 12px/1.4 Arial, sans-serif;
+            text-align: center;
+            transform: translate(-50%, -50%);
+        }
+
+        #game-status[hidden] {
+            display: none;
         }
 
         .color-choice {
-            width: 27px;
-            height: 27px;
+            width: 22px;
+            height: 22px;
             padding: 0;
-            border: 2px solid rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.75);
             border-radius: 50%;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
 
         .color-choice[aria-pressed="true"] {
-            outline: 2px solid #171717;
+            outline: 2px solid #fff;
             outline-offset: 2px;
         }
 
@@ -117,13 +172,11 @@
             width: 64px !important;
             height: 64px !important;
             line-height: 64px !important;
-            border: 2px solid #e9a8b6 !important;
+            border: 2px solid #a97987 !important;
             border-radius: 50% !important;
-            background: #b00050 !important;
+            background: #a33d65 !important;
             color: #fff !important;
-            box-shadow:
-                inset 2px 2px 0 rgba(255, 255, 255, 0.18),
-                0 3px 0 #65002e !important;
+            box-shadow: 0 3px 0 #632b41 !important;
         }
 
         #game-container .ejs_virtualGamepad_button.b_a.ejs_virtualGamepad_button_down,
@@ -135,11 +188,11 @@
         /* Botones L y R */
         #game-container .ejs_virtualGamepad_button.b_l,
         #game-container .ejs_virtualGamepad_button.b_r {
-            border: 2px solid #e9a8b6 !important;
+            border: 2px solid #a97987 !important;
             border-radius: 8px !important;
-            background: #741b36 !important;
+            background: #762b43 !important;
             color: #fff !important;
-            box-shadow: 0 3px 0 #421020 !important;
+            box-shadow: 0 3px 0 #4d192c !important;
         }
 
         /* Cruceta */
@@ -151,9 +204,7 @@
             border: 2px solid #777 !important;
             border-radius: 5px;
             background: #111321 !important;
-            box-shadow:
-                inset 2px 2px 0 rgba(255, 255, 255, 0.12),
-                0 3px 0 #050505 !important;
+            box-shadow: 0 3px 0 #050505 !important;
         }
 
         /* Select y Start */
@@ -176,39 +227,85 @@
 <body>
     <div id="game-container"></div>
 
-    <div id="color-picker" aria-label="Color de la carcasa">
-        <button class="color-choice" type="button" data-color="#4b74c7" aria-label="Azul" aria-pressed="false" title="Azul" style="background:#4b74c7"></button>
-        <button class="color-choice" type="button" data-color="#7560a8" aria-label="Morado" aria-pressed="false" title="Morado" style="background:#7560a8"></button>
-        <button class="color-choice" type="button" data-color="#b6383a" aria-label="Rojo" aria-pressed="false" title="Rojo" style="background:#b6383a"></button>
-        <button class="color-choice" type="button" data-color="#171717" aria-label="Negro" aria-pressed="false" title="Negro" style="background:#171717"></button>
-        <button class="color-choice" type="button" data-color="#c5a34a" aria-label="Dorado" aria-pressed="false" title="Dorado" style="background:#c5a34a"></button>
+    <p id="game-status" role="status" hidden></p>
+
+    <button id="color-picker-toggle" type="button" aria-label="Elegir color de carcasa" aria-expanded="false" aria-controls="color-picker" title="Color de carcasa">
+        <span class="current-color"></span>
+    </button>
+    <div id="color-picker" role="group" aria-label="Colores de la carcasa" hidden>
+        <button class="color-choice" type="button" data-color="#62799e" aria-label="Azul" aria-pressed="false" title="Azul" style="background:#62799e"></button>
+        <button class="color-choice" type="button" data-color="#796b91" aria-label="Morado" aria-pressed="false" title="Morado" style="background:#796b91"></button>
+        <button class="color-choice" type="button" data-color="#a55d5c" aria-label="Rojo" aria-pressed="false" title="Rojo" style="background:#a55d5c"></button>
+        <button class="color-choice" type="button" data-color="#262626" aria-label="Negro" aria-pressed="false" title="Negro" style="background:#262626"></button>
+        <button class="color-choice" type="button" data-color="#a69563" aria-label="Dorado" aria-pressed="false" title="Dorado" style="background:#a69563"></button>
         <button class="color-choice" type="button" data-color="#c8c9bd" aria-label="Gris Game Boy" aria-pressed="true" title="Gris Game Boy" style="background:#c8c9bd"></button>
     </div>
 
     <script>
-        window.EJS_player = "#game-container";
-        window.EJS_core = "gba";
-        window.EJS_gameUrl = "smb.gba";
-        window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
-        window.EJS_startOnLoaded = true;
-        window.EJS_backgroundColor = "#000000";
+        const games = {
+            mario: { core: "gba", url: "smb.gba" },
+            zelda: { core: "gba", url: "games/zelda-minish-cap.gba" }
+        };
+
+        const colorPicker = document.querySelector("#color-picker");
+        const colorPickerToggle = document.querySelector("#color-picker-toggle");
+        const requestedGameId = new URLSearchParams(location.search).get("game") || "mario";
+        const gameStatus = document.querySelector("#game-status");
+
+        async function romExists(url) {
+            try {
+                const response = await fetch(url, { method: "HEAD", cache: "no-store" });
+                return response.ok;
+            } catch {
+                return false;
+            }
+        }
+
+        colorPickerToggle.addEventListener("click", () => {
+            colorPicker.hidden = !colorPicker.hidden;
+            colorPickerToggle.setAttribute("aria-expanded", String(!colorPicker.hidden));
+        });
 
         document.querySelectorAll(".color-choice").forEach((button) => {
             button.addEventListener("click", () => {
-                document.documentElement.style.setProperty(
-                    "--shell-color",
-                    button.dataset.color
-                );
-
+                document.documentElement.style.setProperty("--shell-color", button.dataset.color);
                 document.querySelectorAll(".color-choice").forEach((choice) => {
                     choice.setAttribute("aria-pressed", "false");
                 });
-
                 button.setAttribute("aria-pressed", "true");
+                colorPickerToggle.querySelector(".current-color").style.backgroundColor = button.dataset.color;
+                colorPicker.hidden = true;
+                colorPickerToggle.setAttribute("aria-expanded", "false");
             });
         });
-    </script>
 
-    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+        async function startEmulator() {
+            const game = games[requestedGameId];
+            if (!game) {
+                gameStatus.textContent = "Esta etiqueta apunta a un juego que no está configurado.";
+                gameStatus.hidden = false;
+                return;
+            }
+
+            if (!(await romExists(game.url))) {
+                gameStatus.textContent = `No se encontró ${game.url}. Añade el archivo del juego para activar esta etiqueta.`;
+                gameStatus.hidden = false;
+                return;
+            }
+
+            window.EJS_player = "#game-container";
+            window.EJS_core = game.core;
+            window.EJS_gameUrl = game.url;
+            window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+            window.EJS_startOnLoaded = true;
+            window.EJS_backgroundColor = "#000000";
+
+            const loader = document.createElement("script");
+            loader.src = window.EJS_pathtodata + "loader.js";
+            document.body.appendChild(loader);
+        }
+
+        startEmulator();
+    </script>
 </body>
 </html>
