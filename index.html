@@ -5,17 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Retro NFC - Mario</title>
+    <title>Retro Game</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         html,
         body {
             margin: 0;
             padding: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
-            background: #000;
+            background: #111;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -23,71 +27,170 @@
         #game-container {
             width: 100vw;
             height: 100vh;
-            background: #000;
+            height: 100svh;
+            margin: 0 auto;
+            background: #d0d0d0;
         }
 
-        /* Carcasa negra detrás de la pantalla y los controles */
-        #game-container .ejs_parent,
+        /* Carcasa gris clara, sin logotipo */
+        #game-container.ejs_parent,
         #game-container .ejs_game,
         #game-container .ejs_canvas_parent {
-            background: #000 !important;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background-color: #d0d0d0 !important;
         }
 
-        /* Separación entre la pantalla y la zona de controles */
+        /* Mantiene la imagen del juego arriba y deja visible la carcasa debajo */
+        #game-container .ejs_canvas {
+            display: block;
+            width: 100% !important;
+            height: auto !important;
+            max-height: none !important;
+            object-fit: contain;
+            object-position: top center;
+            background: transparent !important;
+        }
+
+        /* Separa los controles de la pantalla */
         #game-container .ejs_virtualGamepad_parent {
-            bottom: clamp(140px, 24vh, 340px) !important;
+            bottom: clamp(130px, 18vh, 260px) !important;
         }
 
-        /* Botones A, B, L y R */
-        #game-container .ejs_virtualGamepad_button {
-            background: linear-gradient(145deg, #292929, #101010) !important;
-            border: 2px solid #777 !important;
-            color: #ddd !important;
-            box-shadow:
-                inset 2px 2px 3px rgba(255, 255, 255, 0.14),
-                0 4px 0 #050505 !important;
-            text-shadow: 1px 1px 2px #000;
+        /* Botones A y B */
+        #game-container .ejs_virtualGamepad_button.b_a,
+        #game-container .ejs_virtualGamepad_button.b_b {
+            width: 64px !important;
+            height: 64px !important;
+            line-height: 64px !important;
+            border: 0 !important;
+            border-radius: 50% !important;
+            background: #b00050 !important;
+            color: transparent !important;
+            box-shadow: none !important;
+            font-size: 0 !important;
         }
 
-        #game-container .ejs_virtualGamepad_button_down {
-            background: #080808 !important;
-            transform: translateY(2px);
-            box-shadow: inset 0 2px 5px #000 !important;
+        #game-container .ejs_virtualGamepad_button.b_a::after,
+        #game-container .ejs_virtualGamepad_button.b_b::after {
+            position: absolute;
+            right: -4px;
+            bottom: -27px;
+            color: #101c63;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1;
+            pointer-events: none;
         }
 
-        /* Cruceta */
-        #game-container .ejs_dpad_main {
+        #game-container .ejs_virtualGamepad_button.b_a::after {
+            content: "A";
+        }
+
+        #game-container .ejs_virtualGamepad_button.b_b::after {
+            content: "B";
+        }
+
+        #game-container .ejs_virtualGamepad_button.b_a.ejs_virtualGamepad_button_down,
+        #game-container .ejs_virtualGamepad_button.b_b.ejs_virtualGamepad_button_down {
+            background: #85003c !important;
+            transform: scale(0.96);
+        }
+
+        /* Cruceta azul muy oscuro */
+        #game-container .b_dpad .ejs_dpad_main {
             opacity: 1 !important;
         }
 
-        #game-container .ejs_dpad_bar {
-            background: linear-gradient(145deg, #292929, #101010) !important;
-            border: 2px solid #666;
-            box-shadow:
-                inset 2px 2px 3px rgba(255, 255, 255, 0.12),
-                0 4px 0 #050505;
+        #game-container .b_dpad .ejs_dpad_bar {
+            background: #111321 !important;
+            border: 0 !important;
+            border-radius: 7px;
+            box-shadow: none !important;
         }
 
-        #game-container .ejs_dpad_horizontal,
-        #game-container .ejs_dpad_vertical {
-            border-radius: 4px;
+        #game-container .b_dpad .ejs_dpad_horizontal {
+            height: 46px;
             overflow: visible;
         }
 
-        #game-container .ejs_dpad_horizontal:before {
-            border-right-color: #080808;
+        #game-container .b_dpad .ejs_dpad_vertical {
+            width: 46px;
+            overflow: visible;
         }
 
-        #game-container .ejs_dpad_horizontal:after {
-            border-left-color: #080808;
+        #game-container .b_dpad .ejs_dpad_horizontal:before {
+            border-right-color: #080a13;
         }
 
-        #game-container .ejs_dpad_vertical:before {
-            border-bottom-color: #080808;
+        #game-container .b_dpad .ejs_dpad_horizontal:after {
+            border-left-color: #080a13;
         }
 
-        #game-container .ejs_dpad_vertical:after {
-            border-top-color: #080808;
+        #game-container .b_dpad .ejs_dpad_vertical:before {
+            border-bottom-color: #080a13;
+        }
+
+        #game-container .b_dpad .ejs_dpad_vertical:after {
+            border-top-color: #080a13;
+        }
+
+        /* Select y Start */
+        #game-container .ejs_virtualGamepad_button.b_select,
+        #game-container .ejs_virtualGamepad_button.b_start {
+            width: 70px !important;
+            height: 18px !important;
+            line-height: 18px !important;
+            border: 0 !important;
+            border-radius: 20px !important;
+            background: #85858a !important;
+            color: transparent !important;
+            box-shadow: none !important;
+            font-size: 0 !important;
+            transform: rotate(-24deg);
+        }
+
+        #game-container .ejs_virtualGamepad_button.b_select::after,
+        #game-container .ejs_virtualGamepad_button.b_start::after {
+            position: absolute;
+            top: 23px;
+            left: 2px;
+            color: #101c63;
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            font-weight: bold;
+            line-height: 1;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        #game-container .ejs_virtualGamepad_button.b_select::after {
+            content: "SELECT";
+        }
+
+        #game-container .ejs_virtualGamepad_button.b_start::after {
+            content: "START";
+        }
+
+        /* Rejillas del altavoz en la parte inferior derecha */
+        #game-container.ejs_parent::after {
+            content: "";
+            position: absolute;
+            right: 8%;
+            bottom: 4%;
+            z-index: 2;
+            width: 72px;
+            height: 64px;
+            background: repeating-linear-gradient(
+                70deg,
+                transparent 0 8px,
+                #777 8px 12px,
+                transparent 12px 24px
+            );
+            transform: rotate(-12deg);
+            pointer-events: none;
         }
     </style>
 </head>
@@ -101,6 +204,7 @@
         window.EJS_gameUrl = "smb.gba";
         window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
         window.EJS_startOnLoaded = true;
+        window.EJS_backgroundColor = "#d0d0d0";
     </script>
 
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
