@@ -252,15 +252,6 @@
         const requestedGameId = new URLSearchParams(location.search).get("game") || "mario";
         const gameStatus = document.querySelector("#game-status");
 
-        async function romExists(url) {
-            try {
-                const response = await fetch(url, { method: "HEAD", cache: "no-store" });
-                return response.ok;
-            } catch {
-                return false;
-            }
-        }
-
         colorPickerToggle.addEventListener("click", () => {
             colorPicker.hidden = !colorPicker.hidden;
             colorPickerToggle.setAttribute("aria-expanded", String(!colorPicker.hidden));
@@ -279,33 +270,14 @@
             });
         });
 
-        async function startEmulator() {
-            const game = games[requestedGameId];
-            if (!game) {
-                gameStatus.textContent = "Esta etiqueta apunta a un juego que no está configurado.";
-                gameStatus.hidden = false;
-                return;
-            }
-
-            if (!(await romExists(game.url))) {
-                gameStatus.textContent = `No se encontró ${game.url}. Añade el archivo del juego para activar esta etiqueta.`;
-                gameStatus.hidden = false;
-                return;
-            }
-
-            window.EJS_player = "#game-container";
-            window.EJS_core = game.core;
-            window.EJS_gameUrl = game.url;
-            window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
-            window.EJS_startOnLoaded = true;
-            window.EJS_backgroundColor = "#000000";
-
-            const loader = document.createElement("script");
-            loader.src = window.EJS_pathtodata + "loader.js";
-            document.body.appendChild(loader);
-        }
-
-        startEmulator();
+        const game = games[requestedGameId] || games.mario;
+        window.EJS_player = "#game-container";
+        window.EJS_core = game.core;
+        window.EJS_gameUrl = game.url;
+        window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+        window.EJS_startOnLoaded = true;
+        window.EJS_backgroundColor = "#000000";
     </script>
+    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
 </html>
