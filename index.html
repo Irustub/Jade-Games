@@ -2,48 +2,32 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Retro NFC - Gameboy</title>
+    <!-- Etiquetas para adaptación perfecta y modo "App Nativa" -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Retro NFC - Mario</title>
     <style>
-        /* 1. Fondo exterior (La mesa donde apoya el Gameboy) */
-        body { 
+        /* Diseño de máximo rendimiento: sin sombras ni bordes que causen lag */
+        body, html { 
             margin: 0; 
             padding: 0; 
             width: 100vw; 
             height: 100vh; 
-            background-color: #1a1a1a; /* Gris muy oscuro para resaltar la consola */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            background-color: #000; 
+            overflow: hidden; 
+            /* Evita que el usuario seleccione cosas por error al tocar los botones */
+            user-select: none; 
+            -webkit-user-select: none;
         }
-        
-        /* 2. LA CARCASA DEL GAMEBOY */
-        #gameboy-shell {
-            background-color: #d3d5d1; /* El gris clásico de Nintendo */
-            width: 100%;
-            max-width: 450px; 
-            height: 82vh; /* AQUÍ ESTÁ EL TRUCO: Reducimos la altura a 82% para juntar la pantalla y los controles */
-            border-radius: 10px 10px 50px 10px; /* La esquina inferior derecha cortada típica del Gameboy */
-            box-shadow: inset -4px -4px 10px rgba(0,0,0,0.1), 0 15px 30px rgba(0,0,0,0.8);
-            padding: 5px;
-            box-sizing: border-box;
-        }
-
-        /* 3. La pantalla y controles dentro de la carcasa */
         #game-container { 
-            width: 100%; 
-            height: 100%; 
-            border-radius: 5px;
-            overflow: hidden;
+            width: 100vw; 
+            height: 100vh; 
         }
     </style>
 </head>
 <body>
-    <!-- Envolvemos el emulador en nuestra carcasa virtual -->
-    <div id="gameboy-shell">
-        <div id="game-container"></div>
-    </div>
+    <div id="game-container"></div>
     
     <script>
         window.EJS_player = '#game-container';
@@ -51,7 +35,6 @@
         window.EJS_gameUrl = 'smb.gba'; 
         window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
         window.EJS_startOnLoaded = true; 
-        window.EJS_color = '#a6004c'; 
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
