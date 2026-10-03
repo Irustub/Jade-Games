@@ -8,14 +8,14 @@
     <title>Retro NFC - Mario</title>
 
     <style>
-        body,
-        html {
+        html,
+        body {
             margin: 0;
             padding: 0;
             width: 100vw;
             height: 100vh;
-            background-color: #000;
             overflow: hidden;
+            background-color: #c8c9b8;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -23,6 +23,14 @@
         #game-container {
             width: 100vw;
             height: 100vh;
+            background-color: #c8c9b8;
+        }
+
+        /* Fondo de la carcasa detrás de la pantalla y los controles */
+        #game-container .ejs_parent,
+        #game-container .ejs_game,
+        #game-container .ejs_canvas_parent {
+            background-color: #c8c9b8 !important;
         }
 
         /* Botones A, B, L y R */
