@@ -14,8 +14,3 @@ Sitio estático publicado con GitHub Pages. La página principal es `index.html`
 - Mario: `https://irustub.github.io/` (también acepta `?game=mario`).
 - Zelda: `https://irustub.github.io/?game=zelda`.
 
-La URL de la etiqueta selecciona el juego y no se muestra un selector. Asegúrate de que la ROM correspondiente exista en la ruta configurada; EmulatorJS mostrará un error si no puede cargarla.
-
-La página carga EmulatorJS desde `https://cdn.emulatorjs.org/stable/data/`; por tanto, la página y los juegos pueden estar en este repositorio, pero los archivos del emulador todavía se sirven desde el CDN. Para que todo sea del mismo origen habría que alojar también esa distribución en el proyecto.
-
-No publiques ROMs protegidas por derechos de autor sin autorización. Los archivos de `games/` de un sitio público quedan accesibles para cualquier visitante.
