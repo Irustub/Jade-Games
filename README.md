@@ -11,6 +11,5 @@ Sitio estático publicado con GitHub Pages. La página principal es `index.html`
 
 ## URLs para las etiquetas
 
-- Mario: `https://irustub.github.io/` (también acepta `?game=mario`).
-- Zelda: `https://irustub.github.io/?game=zelda`.
+- Asteroids (Game Boy): `https://irustub.github.io/?game=asteroids`.
 
