@@ -9,7 +9,8 @@
 
     <style>
         :root {
-            --shell-color: #c8c9bd;
+            /* Cambiamos el color por defecto al morado de la imagen */
+            --shell-color: #6a1cd8;
             --screen-end: min(66.6667vw, 100svh);
             --gap-size: clamp(48px, 7vh, 82px);
         }
@@ -159,60 +160,75 @@
             outline-offset: 2px;
         }
 
+        /* --- CONTROLES ADAPTADOS A DELTA --- */
+
         /* Botones A y B */
         #game-container .ejs_virtualGamepad_button.b_a,
         #game-container .ejs_virtualGamepad_button.b_b {
-            width: 64px !important;
-            height: 64px !important;
-            line-height: 64px !important;
-            border: 2px solid #a97987 !important;
+            width: 72px !important;
+            height: 72px !important;
+            line-height: 72px !important;
+            border: 2px solid #999 !important;
             border-radius: 50% !important;
-            background: #a33d65 !important;
-            color: #fff !important;
-            box-shadow: 0 3px 0 #632b41 !important;
+            /* Degradado gris claro para efecto 3D */
+            background: linear-gradient(180deg, #fdfdfd 0%, #d8d8d8 100%) !important;
+            color: rgba(180, 180, 180, 0.8) !important;
+            font-size: 26px !important;
+            font-weight: bold !important;
+            /* Sombra caída fuerte + sombra interior para dar volumen */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.15) !important;
         }
 
         #game-container .ejs_virtualGamepad_button.b_a.ejs_virtualGamepad_button_down,
         #game-container .ejs_virtualGamepad_button.b_b.ejs_virtualGamepad_button_down {
-            background: #85003c !important;
-            transform: translateY(2px);
+            background: linear-gradient(180deg, #d8d8d8 0%, #e8e8e8 100%) !important;
+            transform: translateY(3px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6), inset 0 2px 6px rgba(0, 0, 0, 0.2) !important;
         }
 
         /* Botones L y R */
         #game-container .ejs_virtualGamepad_button.b_l,
         #game-container .ejs_virtualGamepad_button.b_r {
-            border: 2px solid #a97987 !important;
-            border-radius: 8px !important;
-            background: #762b43 !important;
-            color: #fff !important;
-            box-shadow: 0 3px 0 #4d192c !important;
+            border: 2px solid #999 !important;
+            border-radius: 12px !important; /* Forma de píldora redondeada */
+            background: linear-gradient(180deg, #fdfdfd 0%, #d8d8d8 100%) !important;
+            color: rgba(180, 180, 180, 0.8) !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
+            box-shadow: 0 5px 6px rgba(0, 0, 0, 0.5), inset 0 -2px 4px rgba(0, 0, 0, 0.1) !important;
         }
 
-        /* Cruceta */
+        /* Cruceta (D-Pad) */
         #game-container .b_dpad .ejs_dpad_main {
             opacity: 1 !important;
         }
 
         #game-container .b_dpad .ejs_dpad_bar {
-            border: 2px solid #777 !important;
-            border-radius: 5px;
-            background: #111321 !important;
-            box-shadow: 0 3px 0 #050505 !important;
+            border: 2px solid #999 !important;
+            border-radius: 10px !important; /* Puntas redondeadas */
+            background: linear-gradient(180deg, #f4f4f4 0%, #c8c8c8 100%) !important;
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.5) !important;
         }
 
         /* Select y Start */
         #game-container .ejs_virtualGamepad_button.b_select,
         #game-container .ejs_virtualGamepad_button.b_start {
-            width: 70px !important;
-            height: 18px !important;
-            line-height: 18px !important;
-            border: 0 !important;
-            border-radius: 20px !important;
-            background: #85858a !important;
-            color: #fff !important;
-            font-size: 12px !important;
-            box-shadow: none !important;
-            transform: rotate(-24deg);
+            width: 26px !important;
+            height: 26px !important;
+            line-height: 26px !important;
+            border: 1px solid #999 !important;
+            border-radius: 50% !important; /* Botones pequeños y redondos */
+            background: linear-gradient(180deg, #fdfdfd 0%, #d8d8d8 100%) !important;
+            color: transparent !important; /* Oculta el texto dentro del botón */
+            font-size: 0px !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5) !important;
+            transform: none !important; /* Quita la rotación original */
+        }
+        
+        #game-container .ejs_virtualGamepad_button.b_select.ejs_virtualGamepad_button_down,
+        #game-container .ejs_virtualGamepad_button.b_start.ejs_virtualGamepad_button_down {
+            transform: translateY(2px) !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
         }
     </style>
 </head>
@@ -227,12 +243,14 @@
     </button>
 
     <div id="color-picker" role="group" aria-label="Colores de la carcasa" hidden>
+        <!-- Se añadió el morado de Delta como opción -->
+        <button class="color-choice" type="button" data-color="#6a1cd8" aria-label="Morado Delta" aria-pressed="true" title="Morado Delta" style="background:#6a1cd8"></button>
         <button class="color-choice" type="button" data-color="#62799e" aria-label="Azul" aria-pressed="false" title="Azul" style="background:#62799e"></button>
         <button class="color-choice" type="button" data-color="#796b91" aria-label="Morado" aria-pressed="false" title="Morado" style="background:#796b91"></button>
         <button class="color-choice" type="button" data-color="#a55d5c" aria-label="Rojo" aria-pressed="false" title="Rojo" style="background:#a55d5c"></button>
         <button class="color-choice" type="button" data-color="#262626" aria-label="Negro" aria-pressed="false" title="Negro" style="background:#262626"></button>
         <button class="color-choice" type="button" data-color="#a69563" aria-label="Dorado" aria-pressed="false" title="Dorado" style="background:#a69563"></button>
-        <button class="color-choice" type="button" data-color="#c8c9bd" aria-label="Gris Game Boy" aria-pressed="true" title="Gris Game Boy" style="background:#c8c9bd"></button>
+        <button class="color-choice" type="button" data-color="#c8c9bd" aria-label="Gris Game Boy" aria-pressed="false" title="Gris Game Boy" style="background:#c8c9bd"></button>
     </div>
 
     <script>
