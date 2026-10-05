@@ -92,10 +92,12 @@
             align-items: center;
             z-index: 9999;
             gap: 20px;
+            transition: opacity 0.4s ease;
         }
 
         #loading-container.hidden {
-            display: none;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .loading-spinner {
@@ -131,8 +133,9 @@
             height: 100%;
             background: linear-gradient(90deg, #6a1cd8, #9d4edd);
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.2s ease;
             border-radius: 4px;
+            box-shadow: 0 0 10px rgba(106, 28, 216, 0.6);
         }
 
         .progress-percentage {
@@ -366,12 +369,12 @@
         // Simular progreso de carga
         let fakeProgress = 0;
         const fakeProgressInterval = setInterval(() => {
-            if (fakeProgress < 80) {
-                fakeProgress += Math.random() * 30;
-                if (fakeProgress > 80) fakeProgress = 80;
+            if (fakeProgress < 90) {
+                fakeProgress += Math.random() * 25;
+                if (fakeProgress > 90) fakeProgress = 90;
                 updateProgressBar(fakeProgress);
             }
-        }, 300);
+        }, 250);
 
         function updateProgressBar(percentage) {
             progressBar.style.width = percentage + "%";
@@ -384,7 +387,7 @@
             updateProgressBar(100);
             setTimeout(() => {
                 loadingContainer.classList.add("hidden");
-            }, 300);
+            }, 200);
         }
 
         const game = games[requestedGameId] || games.mario;
@@ -397,30 +400,43 @@
         window.EJS_startOnLoaded = true;
         window.EJS_backgroundColor = "#000000";
         window.EJS_throttle = 100;  // Mejora el rendimiento en modo normal
-        window.EJS_audioVolume = 0.7; // Volumen optimizado
+        window.EJS_audioVolume = 0.75; // Volumen optimizado
         
-        // Event para cuando el juego cargue
-        document.querySelector("#game-container").addEventListener("DOMContentLoaded", hideLoadingScreen, false);
+        // Configuración de audio mejorada
+        window.EJS_audioBuffer = 4096; // Buffer de audio más grande para menos distorsión
+        window.EJS_audioSampleRate = 44100; // Sample rate estándar
         
-        // Fallback: ocultar pantalla de carga después de 8 segundos
+        // Detección mejorada de carga
+        let gameLoaded = false;
+        
+        const checkGameLoaded = setInterval(() => {
+            // Verificar si el canvas está renderizando
+            const gameCanvas = document.querySelector("#game-container canvas");
+            const gamepadParent = document.querySelector("#game-container .ejs_virtualGamepad_parent");
+            
+            // Verificar si el canvas tiene dimensiones válidas y está visible
+            if (gameCanvas && gamepadParent && !gameLoaded) {
+                const canvasRect = gameCanvas.getBoundingClientRect();
+                
+                // Si el canvas tiene tamaño y está visible, el juego está listo
+                if (canvasRect.width > 0 && canvasRect.height > 0) {
+                    gameLoaded = true;
+                    clearInterval(checkGameLoaded);
+                    hideLoadingScreen();
+                }
+            }
+        }, 100);
+        
+        // Fallback: ocultar pantalla de carga después de 10 segundos máximo
         setTimeout(() => {
-            if (!loadingContainer.classList.contains("hidden")) {
+            if (!gameLoaded) {
+                gameLoaded = true;
+                clearInterval(checkGameLoaded);
                 hideLoadingScreen();
             }
-        }, 8000);
+        }, 10000);
     </script>
 
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
-    
-    <script>
-        // Detectar cuando el emulador termina de cargar
-        const checkGameLoaded = setInterval(() => {
-            const gameCanvas = document.querySelector("#game-container canvas");
-            if (gameCanvas && document.querySelector("#game-container .ejs_virtualGamepad_parent")) {
-                hideLoadingScreen();
-                clearInterval(checkGameLoaded);
-            }
-        }, 100);
-    </script>
 </body>
 </html>
