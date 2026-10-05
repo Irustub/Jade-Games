@@ -78,6 +78,70 @@
             z-index: 3 !important;
         }
 
+        /* Barra de carga */
+        #loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            gap: 20px;
+        }
+
+        #loading-container.hidden {
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(106, 28, 216, 0.3);
+            border-top: 5px solid #6a1cd8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .progress-bar-container {
+            width: 300px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #6a1cd8, #9d4edd);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .progress-percentage {
+            color: #aaa;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
         #color-picker-toggle {
             position: fixed;
             top: calc(var(--screen-end) + var(--gap-size) + 12px);
@@ -234,6 +298,16 @@
 </head>
 
 <body>
+    <!-- Contenedor de carga -->
+    <div id="loading-container">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Cargando emulador...</div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="progress-percentage" id="progress-percentage">0%</div>
+    </div>
+
     <div id="game-container"></div>
 
     <p id="game-status" role="status" hidden></p>
@@ -265,6 +339,9 @@
         const colorPickerToggle = document.querySelector("#color-picker-toggle");
         const requestedGameId = new URLSearchParams(location.search).get("game") || "mario";
         const gameStatus = document.querySelector("#game-status");
+        const loadingContainer = document.querySelector("#loading-container");
+        const progressBar = document.querySelector("#progress-bar");
+        const progressPercentage = document.querySelector("#progress-percentage");
 
         colorPickerToggle.addEventListener("click", () => {
             colorPicker.hidden = !colorPicker.hidden;
@@ -286,15 +363,64 @@
             });
         });
 
+        // Simular progreso de carga
+        let fakeProgress = 0;
+        const fakeProgressInterval = setInterval(() => {
+            if (fakeProgress < 80) {
+                fakeProgress += Math.random() * 30;
+                if (fakeProgress > 80) fakeProgress = 80;
+                updateProgressBar(fakeProgress);
+            }
+        }, 300);
+
+        function updateProgressBar(percentage) {
+            progressBar.style.width = percentage + "%";
+            progressPercentage.textContent = Math.floor(percentage) + "%";
+        }
+
+        // Función para ocultar la pantalla de carga
+        function hideLoadingScreen() {
+            clearInterval(fakeProgressInterval);
+            updateProgressBar(100);
+            setTimeout(() => {
+                loadingContainer.classList.add("hidden");
+            }, 300);
+        }
+
         const game = games[requestedGameId] || games.mario;
         window.EJS_player = "#game-container";
         window.EJS_core = game.core;
         window.EJS_gameUrl = game.url;
         window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+        
+        // Optimizaciones de rendimiento
         window.EJS_startOnLoaded = true;
         window.EJS_backgroundColor = "#000000";
+        window.EJS_throttle = 100;  // Mejora el rendimiento en modo normal
+        window.EJS_audioVolume = 0.7; // Volumen optimizado
+        
+        // Event para cuando el juego cargue
+        document.querySelector("#game-container").addEventListener("DOMContentLoaded", hideLoadingScreen, false);
+        
+        // Fallback: ocultar pantalla de carga después de 8 segundos
+        setTimeout(() => {
+            if (!loadingContainer.classList.contains("hidden")) {
+                hideLoadingScreen();
+            }
+        }, 8000);
     </script>
 
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+    
+    <script>
+        // Detectar cuando el emulador termina de cargar
+        const checkGameLoaded = setInterval(() => {
+            const gameCanvas = document.querySelector("#game-container canvas");
+            if (gameCanvas && document.querySelector("#game-container .ejs_virtualGamepad_parent")) {
+                hideLoadingScreen();
+                clearInterval(checkGameLoaded);
+            }
+        }, 100);
+    </script>
 </body>
 </html>
